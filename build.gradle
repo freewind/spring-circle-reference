@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+//ext.SPRING_VERSION = "3.2.2.RELEASE"
+ext.SPRING_VERSION = "4.1.3.RELEASE"
+ext.APACHE_HTTP_CLIENT_VERSION = '4.3.6'
+ext {
+    SPRING_WEBMVC = "org.springframework:spring-webmvc:${SPRING_VERSION}"
+    SPRING_CONTEXT = "org.springframework:spring-context:${SPRING_VERSION}"
+    SPRING_CORE = "org.springframework:spring-core:${SPRING_VERSION}"
+    SPRING_TEST = "org.springframework:spring-test:${SPRING_VERSION}"
+    APACHE_HTTP_CLIENT = "org.apache.httpcomponents:httpclient:${APACHE_HTTP_CLIENT_VERSION}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(
+            'org.apache.commons:commons-lang3:3.2.1',
+            'org.apache.commons:commons-io:1.3.2',
+            'com.google.guava:guava:16.0',
+            SPRING_WEBMVC, SPRING_CONTEXT, SPRING_CORE,
+            APACHE_HTTP_CLIENT
+    )
+    testCompile(
+        'junit:junit:4.11', SPRING_TEST
+    )
+}

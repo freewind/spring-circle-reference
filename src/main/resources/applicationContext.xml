@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-4.1.xsd
+     ">
+
+    <context:component-scan base-package="myweb"/>
+
+    <context:annotation-config/>
+
+    <bean id="gzipRequestInterceptor" class="myweb.GzipRequestInterceptor"/>
+    <bean id="gzipResponseInterceptor" class="myweb.GzipResponseInterceptor"/>
+
+    <bean id="addRequestInterceptor" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="httpClient"/>
+        <property name="targetMethod" value="addRequestInterceptor"/>
+        <property name="arguments">
+            <list>
+                <ref bean="gzipRequestInterceptor"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="addResponseInterceptor" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="httpClient"/>
+        <property name="targetMethod" value="addResponseInterceptor"/>
+        <property name="arguments">
+            <list>
+                <ref bean="gzipResponseInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+        <constructor-arg>
+            <bean class="org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager" p:defaultMaxPerRoute="100"
+                  p:maxTotal="100"/>
+        </constructor-arg>
+    </bean>
+
+</beans>
